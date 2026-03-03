@@ -36,7 +36,7 @@ void RGB_update()
     if (!period)
     {
         const uint32_t tpm = time_hw_ticks_per_ms();
-        uint64_t p = (uint64_t)tpm * 50ull;           // 50ms
+        uint64_t p = (uint64_t)tpm * 10ull;           // 10ms
         period = (p ? p : 1ull);
     }
 
@@ -250,6 +250,7 @@ int main(void)
 
                 if (ahub_stu == ahubus_package_type::heartbeat)
                 {
+                    SYS_RGB.set_RGB(0x00, 0x10, 0x00, 0);
                     bus_host_device_type = host_device_type_ahub;
                 }
 

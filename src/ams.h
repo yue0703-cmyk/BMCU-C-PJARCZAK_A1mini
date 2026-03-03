@@ -76,6 +76,8 @@ struct _filament
 static_assert((__builtin_offsetof(_filament, meters) & 3u) == 0u, "meters misaligned");
 static_assert((__builtin_offsetof(_filament, meters_virtual_count) & 3u) == 0u, "meters_virtual_count misaligned");
 
+#define ams_version_name "AMS08"
+#define ams_lite_version_name "AMS_F102"
 
 struct _ams
 {
