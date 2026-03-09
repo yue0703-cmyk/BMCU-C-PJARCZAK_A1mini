@@ -137,7 +137,7 @@ static inline bool AS5600_is_good(uint8_t ch) { return g_as5600_good[ch] != 0; }
 static constexpr float PULL_V_FAST   = 60.0f;   // mm/s
 static constexpr float PULL_V_END    = 12.0f;   // mm/s na samym końcu
 static constexpr float PULL_RAMP_M   = 0.015f;  // 15mm strefa hamowania
-static constexpr float PULL_PWM_MIN  = 400.0f;  // "kop" przy pullback
+static constexpr float PULL_PWM_MIN  = 450.0f;  // "kop" przy pullback
 
 static float g_pull_remain_m[4]  = {0,0,0,0};
 static float g_pull_speed_set[4] = {-PULL_V_FAST,-PULL_V_FAST,-PULL_V_FAST,-PULL_V_FAST}; // mm/s (ujemne)
@@ -238,13 +238,13 @@ static constexpr int MC_PULL_DEADBAND_PCT_HIGH = 70;
     static constexpr float MC_ON_USE_BAND_HI_PCT   = 65.0f;
 #else        // A1
     // Stage1
-    static constexpr int   MC_LOAD_S1_FAST_PCT       = 85;
-    static constexpr int   MC_LOAD_S1_HARD_STOP_PCT  = 95;  // bezpiecznik
+    static constexpr int   MC_LOAD_S1_FAST_PCT       = 70;
+    static constexpr int   MC_LOAD_S1_HARD_STOP_PCT  = 85;  // bezpiecznik
     static constexpr int   MC_LOAD_S1_HARD_HYS       = 2;   // wróć dopiero < (HARD_STOP - HYS)
     // Stage2 (hold_load)
-    static constexpr float MC_LOAD_S2_HOLD_TARGET_PCT    = 90.0f;
+    static constexpr float MC_LOAD_S2_HOLD_TARGET_PCT    = 85.0f;
     static constexpr float MC_LOAD_S2_HOLD_BAND_LO_DELTA = 0.3f;   // push_hi = hold_target - delta
-    static constexpr float MC_LOAD_S2_PUSH_START_PCT     = 80.0f;  // start push PWM
+    static constexpr float MC_LOAD_S2_PUSH_START_PCT     = 60.0f;  // start push PWM
     static constexpr float MC_LOAD_S2_PWM_HI             = 480.0f;
     static constexpr float MC_LOAD_S2_PWM_LO             = 1000.0f;
     // ===== ON_USE CONTROL =====
@@ -1729,7 +1729,7 @@ public:
                     x = (x > 0.0f) ? KICK_PWM : -KICK_PWM;
                 }
 
-                if (stall_s[CHx] > 0.8f)
+                if (stall_s[CHx] > 8.0f)
                 {
                     stall_s[CHx] = 0.0f;
                     block_until_ms[CHx] = now_ms + 500;
@@ -1808,7 +1808,7 @@ public:
             {
                 const float pct = MC_PULL_pct_f[CHx];
 
-                if (pct < 40.0f)
+                if (MC_ONLINE_key_stu[CHx] != 0u && pct <= 40.0f)
                 {
                     g_on_use_low_latch[CHx] = 1u;
                     g_on_use_jam_latch[CHx] = 1u;
